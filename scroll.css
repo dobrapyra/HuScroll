@@ -1,0 +1,54 @@
+.scroll{
+	z-index: 0;
+	position: relative;
+	overflow: auto;
+	height: 100%;
+}
+
+.scroll--v{
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+.scroll--h{
+	overflow-x: scroll;
+	overflow-y: hidden;
+}
+
+.scroll__wrapper{
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+}
+
+.scroll__bar{
+	z-index: 1;
+	position: absolute;
+	background-color: rgba(0,0,0,0.2);
+	cursor: pointer;
+}
+
+.scroll__bar--v{
+	width: 4px;
+	height: 100%;
+	top: 0;
+	right: 0;
+	transition: width 0.2s;
+}
+
+.scroll__bar--v:hover{
+	width: 10px;
+}
+
+.scroll__bar--h{
+	width: 100%;
+	height: 4px;
+	left: 0;
+	bottom: 0;
+	transition: height 0.2s;
+}
+
+.scroll__bar--h:hover{
+	height: 10px;
+}
