@@ -1,6 +1,6 @@
-var Scroll = function(el, options){ this.init(el, options); };
-Scroll.prototype = {
-	constructor: Scroll,
+var HuScroll = function(el, options){ this.init(el, options); };
+HuScroll.prototype = {
+	constructor: HuScroll,
 
 	init: function(el, options){
 		if( !this._setVars(el, options) ) return;
@@ -15,9 +15,10 @@ Scroll.prototype = {
 	_setVars: function(el, options){
 		if( !el ) return false;
 		this._scroll = el;
-		this._scroll.scroll = this;
+		this._scroll._hus = this;
 
 		options = options || {};
+		this._cssClass = options.cssClass || 'huscroll';
 
 		this._nativeHidden = {
 			v: false,
@@ -30,40 +31,55 @@ Scroll.prototype = {
 	},
 
 	_prepareDom: function(){
-		var wrapper, classes, className;
+		var scroll = this._scroll, wrapper, sClass, cssClass = this._cssClass;
 
 		wrapper = document.createElement('div');
-		wrapper.setAttribute( 'class', 'scroll__wrapper' );
-		className = !this._horizontal ? 'scroll--v' : 'scroll--h';
-		classes = this._scroll.getAttribute( 'class' ).split(' ');
-		classes.push('className');
-		this._scroll.setAttribute( 'class', classes.join(' ') );
-		this._scroll.parentElement.insertBefore( wrapper, this._scroll );
-		wrapper.appendChild( this._scroll );
+		wrapper.setAttribute( 'class', cssClass + '__wrapper' );
+		sClass = cssClass + ( !this._horizontal ? '--v' : '--h' );
+		this._addClass( scroll, [ cssClass, sClass ] );
+		scroll.parentElement.insertBefore( wrapper, scroll );
+		wrapper.appendChild( scroll );
 		this._scrollWrapper = wrapper;
 	},
 
+	_addClass: function(el, cssClass){
+		var i, classes = el.getAttribute( 'class' ).split(' ');
+		if( typeof cssClass !== 'object' ){
+			this._insertUnique( classes, cssClass );
+		}else{
+			for( i = 0; i < cssClass.length; i++ ){
+				this._insertUnique( classes, cssClass[i] );
+			}
+		}
+		el.setAttribute( 'class', classes.join(' ') );
+	},
+
+	_insertUnique: function(arr, item){
+		if( arr.indexOf(item) < 0 ) arr.push( item );
+	},
+
 	_hideScroll: function(){
+		var scroll = this._scroll;
 
 		if( !this._horizontal ){
 
-			this._scroll.style.marginLeft = 0;
-			this._scroll.style.marginRight = 0;
-			var xDiff = this._scroll.offsetWidth - this._scroll.scrollWidth;
-			this._scroll.style.marginLeft = '';
-			if( xDiff ){
-				this._scroll.style.marginRight = -xDiff+'px';
+			scroll.style.marginLeft = 0;
+			scroll.style.marginRight = 0;
+			var wDiff = scroll.offsetWidth - scroll.scrollWidth;
+			scroll.style.marginLeft = '';
+			if( wDiff ){
+				scroll.style.marginRight = -wDiff+'px';
 				this._nativeHidden.v = true;
 			}
 
 		}else{
 
-			this._scroll.style.marginTop= 0;
-			this._scroll.style.marginBottom = 0;
-			var yDiff = this._scroll.offsetHeight - this._scroll.scrollHeight;
-			this._scroll.style.marginTop = '';
-			if( yDiff ){
-				this._scroll.style.marginBottom = -yDiff+'px';
+			scroll.style.marginTop= 0;
+			scroll.style.marginBottom = 0;
+			var hDiff = scroll.offsetHeight - scroll.scrollHeight;
+			scroll.style.marginTop = '';
+			if( hDiff ){
+				scroll.style.marginBottom = -hDiff+'px';
 				this._nativeHidden.h = true;
 			}
 
@@ -72,35 +88,39 @@ Scroll.prototype = {
 	},
 
 	_addBars: function(){
-		var sBar, sBarVars;
+		var sBar, sBarVars, cssClass = this._cssClass;
 
 		this._scrollBar = {
 			v: null,
 			h: null
 		};
 
-		if( this._nativeHidden.v ){
-			sBar = document.createElement('div');
-			sBar.setAttribute( 'class', 'scroll__bar scroll__bar--v' );
-			sBar._scroll = {};
-			sBarVars = sBar._scroll;
-			sBarVars.moveStart = null;
-			sBarVars.moveDiff = 0;
-			sBarVars.scrollBefore = null;
-			this._scrollWrapper.appendChild( sBar );
-			this._scrollBar.v = sBar;
-		}
+		if( this._nativeHidden.v || this._nativeHidden.h ){
 
-		if( this._nativeHidden.h ){
-			sBar = document.createElement('div');
-			sBar.setAttribute( 'class', 'scroll__bar scroll__bar--h' );
-			sBar._scroll = {};
-			sBarVars = sBar._scroll;
-			sBarVars.moveStart = null;
-			sBarVars.moveDiff = 0;
-			sBarVars.scrollBefore = null;
-			this._scrollWrapper.appendChild( sBar );
-			this._scrollBar.h = sBar;
+			if( this._nativeHidden.v ){
+				sBar = document.createElement('div');
+				sBar.setAttribute( 'class', cssClass + '__bar ' + cssClass + '__bar--v' );
+				sBar._hus = {};
+				sBarVars = sBar._hus;
+				sBarVars.moveStart = null;
+				sBarVars.moveDiff = 0;
+				sBarVars.scrollBefore = null;
+				this._scrollWrapper.appendChild( sBar );
+				this._scrollBar.v = sBar;
+			}
+
+			if( this._nativeHidden.h ){
+				sBar = document.createElement('div');
+				sBar.setAttribute( 'class', cssClass + '__bar ' + cssClass + '__bar--h' );
+				sBar._hus = {};
+				sBarVars = sBar._hus;
+				sBarVars.moveStart = null;
+				sBarVars.moveDiff = 0;
+				sBarVars.scrollBefore = null;
+				this._scrollWrapper.appendChild( sBar );
+				this._scrollBar.h = sBar;
+			}
+			
 		}
 	},
 
@@ -125,26 +145,19 @@ Scroll.prototype = {
 		if( this._scrollBar.v !== null ){
 
 			this._scrollBar.v.addEventListener( 'mousedown', function(e){
-				this._scroll.moveStart = e.clientY;
-				this._scroll.scrollBefore = _this._scroll.scrollTop;
+				_this._moveBegin( e, this._hus, false );
 			} );
 
 			this._scrollBar.v.addEventListener( 'mousemove', function(e){
-				if( this._scroll.moveStart === null ) return;
-				this._scroll.moveDiff = e.clientY - this._scroll.moveStart;
-				_this._barMoveToScroll(false);
+				_this._moveUpdate( e, this._hus, false );
 			} );
 
 			this._scrollBar.v.addEventListener( 'mouseup', function(e){
-				this._scroll.moveStart = null;
-				this._scroll.moveDiff = 0;
-				this._scroll.scrollBefore = null;
+				_this._moveEnd( e, this._hus );
 			} );
 
 			this._scrollBar.v.addEventListener( 'mouseleave', function(e){
-				this._scroll.moveStart = null;
-				this._scroll.moveDiff = 0;
-				this._scroll.scrollBefore = null;
+				_this._moveEnd( e, this._hus );
 			} );
 
 		}
@@ -152,30 +165,51 @@ Scroll.prototype = {
 		if( this._scrollBar.h !== null ){
 
 			this._scrollBar.h.addEventListener( 'mousedown', function(e){
-				this._scroll.moveStart = e.clientX;
-				this._scroll.scrollBefore = _this._scroll.scrollLeft;
+				_this._moveBegin( e, this._hus, true );
 			} );
 
 			this._scrollBar.h.addEventListener( 'mousemove', function(e){
-				if( this._scroll.moveStart === null ) return;
-				this._scroll.moveDiff = e.clientY - this._scroll.moveStart;
-				_this._barMoveToScroll(true);
+				_this._moveUpdate( e, this._hus, true );
 			} );
 
 			this._scrollBar.h.addEventListener( 'mouseup', function(e){
-				this._scroll.moveStart = null;
-				this._scroll.moveDiff = 0;
-				this._scroll.scrollBefore = null;
+				_this._moveEnd( e, this._hus );
 			} );
 
 			this._scrollBar.h.addEventListener( 'mouseleave', function(e){
-				this._scroll.moveStart = null;
-				this._scroll.moveDiff = 0;
-				this._scroll.scrollBefore = null;
+				_this._moveEnd( e, this._hus );
 			} );
 
 		}
 
+	},
+
+	_moveBegin: function(e, sBarVars, horizontal){
+		if( !horizontal ){
+			sBarVars.moveStart = e.clientY;
+			sBarVars.scrollBefore = this._scroll.scrollTop;
+		}else{
+			sBarVars.moveStart = e.clientX;
+			sBarVars.scrollBefore = this._scroll.scrollLeft;
+		}
+		this._scroll.style.pointerEvents = 'none';
+	},
+
+	_moveUpdate: function(e, sBarVars, horizontal){
+		if( sBarVars.moveStart === null ) return;
+		if( !horizontal ){
+			sBarVars.moveDiff = e.clientY - sBarVars.moveStart;
+		}else{
+			sBarVars.moveDiff = e.clientX - sBarVars.moveStart;
+		}
+		this._barMoveToScroll( horizontal );
+	},
+
+	_moveEnd: function(e, sBarVars){
+		sBarVars.moveStart = null;
+		sBarVars.moveDiff = 0;
+		sBarVars.scrollBefore = null;
+		this._scroll.style.pointerEvents = '';
 	},
 
 	_setBarsSize: function(){
@@ -183,7 +217,7 @@ Scroll.prototype = {
 
 		if( this._scrollBar.v !== null ){
 			sBar = this._scrollBar.v;
-			sBarVars = sBar._scroll;
+			sBarVars = sBar._hus;
 			size = this._scroll.offsetHeight / this._scroll.scrollHeight;
 			// sBar.style.height = ( size * 100 ) + '%';
 			sBar.style.height = ( size * this._scroll.offsetHeight ) + 'px';
@@ -194,10 +228,10 @@ Scroll.prototype = {
 
 		if( this._scrollBar.h !== null ){
 			sBar = this._scrollBar.h;
-			sBarVars = sBar._scroll;
+			sBarVars = sBar._hus;
 			size = this._scroll.offsetWidth / this._scroll.scrollWidth;
 			// sBar.style.width = ( size * 100 ) + '%';
-			sBar.style.width = ( size * this._scroll.offsetHeight ) + 'px';
+			sBar.style.width = ( size * this._scroll.offsetWidth ) + 'px';
 			sBarVars.size = size;
 			sBarVars.scrollRange = this._scroll.scrollWidth - this._scroll.offsetWidth;
 			sBarVars.moveRange = this._scroll.offsetWidth - sBar.offsetWidth;
@@ -206,24 +240,24 @@ Scroll.prototype = {
 	},
 
 	_setBarsPos: function(){
-		var pos, sBar, sBarVars;
+		var scroll = this._scroll, pos, sBar, sBarVars;
 
 		if( this._scrollBar.v !== null ){
 			sBar = this._scrollBar.v;
-			sBarVars = sBar._scroll;
-			pos = this._scroll.scrollTop / ( this._scroll.scrollHeight - this._scroll.offsetHeight );
-			pos *= ( this._scroll.offsetHeight - ( this._scroll.offsetHeight * sBarVars.size ) );
-			sBarVars.pos = pos;
+			sBarVars = sBar._hus;
+			pos = scroll.scrollTop / sBarVars.scrollRange;
+			pos *= scroll.offsetHeight * ( 1 - sBarVars.size );
 			sBar.style.transform = 'translateY(' + pos + 'px)';
+			sBarVars.pos = pos;
 		}
 
 		if( this._scrollBar.h !== null ){
 			sBar = this._scrollBar.h;
-			sBarVars = sBar._scroll;
-			pos = this._scroll.scrollLeft / ( this._scroll.scrollWidth - this._scroll.offsetWidth );
-			pos *= ( this._scroll.offsetWidth - ( this._scroll.offsetWidth * sBarVars.size ) );
-			sBarVars.pos = pos;
+			sBarVars = sBar._hus;
+			pos = scroll.scrollLeft / sBarVars.scrollRange;
+			pos *= scroll.offsetWidth * ( 1 - sBarVars.size );
 			sBar.style.transform = 'translateX(' + pos + 'px)';
+			sBarVars.pos = pos;
 		}
 
 	},
@@ -232,14 +266,15 @@ Scroll.prototype = {
 		var newScroll, sBarVars;
 
 		if( !horizontal ){
-			sBarVars = this._scrollBar.v._scroll;
+			sBarVars = this._scrollBar.v._hus;
 		}else{
-			sBarVars = this._scrollBar.h._scroll;
+			sBarVars = this._scrollBar.h._hus;
 		}
 
 		newScroll = sBarVars.scrollBefore + ( sBarVars.scrollRange * sBarVars.moveDiff / sBarVars.moveRange );
-		if( newScroll > sBarVars.scrollRange ) newScroll = sBarVars.scrollRange;
-		if( newScroll < 0 ) newScroll = 0;
+		// .scrollTop or .scrollLeft do the same
+		// if( newScroll > sBarVars.scrollRange ) newScroll = sBarVars.scrollRange;
+		// if( newScroll < 0 ) newScroll = 0;
 
 		if( !horizontal ){
 			this._scroll.scrollTop = newScroll;
@@ -248,11 +283,6 @@ Scroll.prototype = {
 		}
 
 	},
-
-	// refresh: function(){
-	// 	this._hideScroll();
-	// 	this.refreshBars();
-	// },
 
 	refreshBars: function(){
 		this._setBarsSize();

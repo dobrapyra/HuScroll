@@ -1,28 +1,33 @@
-.scroll{
+.huscroll{
 	z-index: 0;
-	position: relative;
+	/*position: relative;*/
+	/*height: 100%;*/
 	overflow: auto;
-	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 }
 
-.scroll--v{
+.huscroll--v{
 	overflow-x: hidden;
 	overflow-y: scroll;
 }
 
-.scroll--h{
+.huscroll--h{
 	overflow-x: scroll;
 	overflow-y: hidden;
 }
 
-.scroll__wrapper{
+.huscroll__wrapper{
 	position: relative;
 	overflow: hidden;
 	width: 100%;
 	height: 100%;
 }
 
-.scroll__bar{
+.huscroll__bar{
 	z-index: 1;
 	position: absolute;
 	background-color: rgba(0,0,0,0.2);
@@ -30,11 +35,11 @@
 	transition: background-color 0.2s;
 }
 
-.scroll__bar:hover{
+.huscroll__bar:hover{
 	background-color: rgba(0,0,0,0.8);
 }
 
-.scroll__bar--v{
+.huscroll__bar--v{
 	width: 4px;
 	height: 100%;
 	top: 0;
@@ -42,11 +47,11 @@
 	transition: width 0.2s, background-color 0.2s;
 }
 
-.scroll__bar--v:hover{
+.huscroll__bar--v:hover{
 	width: 12px;
 }
 
-.scroll__bar--h{
+.huscroll__bar--h{
 	width: 100%;
 	height: 4px;
 	left: 0;
@@ -54,6 +59,6 @@
 	transition: height 0.2s, background-color 0.2s;
 }
 
-.scroll__bar--h:hover{
+.huscroll__bar--h:hover{
 	height: 12px;
 }

@@ -7,7 +7,7 @@ body{
 
 .exampleBox{
 	position: relative;
-	max-width: 400px;
+	max-width: 402px; /* 400 + 2 * 1px */
 	margin: 60px auto;
 }
 
@@ -23,12 +23,13 @@ body{
 
 .innerBox{
 	position: relative;
-	margin: 20px;
+	box-sizing: border-box;
+	padding: 20px;
 	text-align: justify;
 }
 
 .innerBox--h{
-	width: 2000px;
+	width: 1600px;
 }
 
 .innerBox p{
