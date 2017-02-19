@@ -27,6 +27,11 @@
 	position: absolute;
 	background-color: rgba(0,0,0,0.2);
 	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.scroll__bar:hover{
+	background-color: rgba(0,0,0,0.8);
 }
 
 .scroll__bar--v{
@@ -34,11 +39,11 @@
 	height: 100%;
 	top: 0;
 	right: 0;
-	transition: width 0.2s;
+	transition: width 0.2s, background-color 0.2s;
 }
 
 .scroll__bar--v:hover{
-	width: 10px;
+	width: 12px;
 }
 
 .scroll__bar--h{
@@ -46,9 +51,9 @@
 	height: 4px;
 	left: 0;
 	bottom: 0;
-	transition: height 0.2s;
+	transition: height 0.2s, background-color 0.2s;
 }
 
 .scroll__bar--h:hover{
-	height: 10px;
+	height: 12px;
 }

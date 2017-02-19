@@ -5,23 +5,38 @@ body{
 	font-family: Verdana, Tahoma, Arial;
 }
 
+.exampleBox{
+	position: relative;
+	max-width: 400px;
+	margin: 60px auto;
+}
+
+.exampleBox__title{
+	margin: 0;
+}
+
 .outerBox{
 	position: relative;
 	height: 300px;
-	max-width: 400px;
-	margin: 100px auto;
 	border: 1px solid #aaa;
 }
 
 .innerBox{
 	position: relative;
-	margin: 0 20px;
+	margin: 20px;
+	text-align: justify;
+}
+
+.innerBox--h{
+	width: 2000px;
 }
 
 .innerBox p{
 	margin: 0;
+	font-size: 14px;
+	line-height: 20px;
 }
 
 .innerBox p + p{
-	margin-top: 10px;
+	margin-top: 16px;
 }
