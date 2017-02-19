@@ -1,3 +1,4 @@
+/* globals document */
 /**
 * HuScroll - (Hide ugly) Scroll
 * author: dobrapyra (Michał Zieliński)
@@ -146,48 +147,72 @@ HuScroll.prototype = {
 
 	},
 
-	_bindBarsEvents: function(){
-		var _this = this;
+	_bindBarsEvents: function(){ 
+		var _this = this, sBar, sBarVars;
 		
 		if( this._scrollBar.v !== null ){
+			sBar = this._scrollBar.v;
+			sBarVars = sBar._hus;
+			sBarVars.events = {};
 
-			this._scrollBar.v.addEventListener( 'mousedown', function(e){
-				_this._moveBegin( e, this._hus, false );
-			} );
+			sBar.addEventListener( 'mousedown', function elh(e){
+				sBarVars.events.mousedown = elh;
+				_this._moveBegin( e, sBarVars, false );
 
-			this._scrollBar.v.addEventListener( 'mousemove', function(e){
-				_this._moveUpdate( e, this._hus, false );
-			} );
+				document.addEventListener( 'mousemove', function elh(e){
+					sBarVars.events.mousemove = elh;
+					_this._moveUpdate( e, sBarVars, false );
+				} );
 
-			this._scrollBar.v.addEventListener( 'mouseup', function(e){
-				_this._moveEnd( e, this._hus );
-			} );
+				document.addEventListener( 'mouseup', function elh(e){
+					sBarVars.events.mouseup = elh;
+					_this._moveEnd( e, sBarVars );
+				} );
 
-			this._scrollBar.v.addEventListener( 'mouseleave', function(e){
-				_this._moveEnd( e, this._hus );
+				document.addEventListener( 'mouseleave', function elh(e){
+					sBarVars.events.mouseleave = elh;
+					_this._moveEnd( e, sBarVars );
+				} );
+
 			} );
 
 		}
 
 		if( this._scrollBar.h !== null ){
+			sBar = this._scrollBar.h;
+			sBarVars = sBar._hus;
+			sBarVars.events = {};
 
-			this._scrollBar.h.addEventListener( 'mousedown', function(e){
-				_this._moveBegin( e, this._hus, true );
-			} );
+			sBar.addEventListener( 'mousedown', function elh(e){
+				sBarVars.events.mousedown = elh;
+				_this._moveBegin( e, sBarVars, true );
 
-			this._scrollBar.h.addEventListener( 'mousemove', function(e){
-				_this._moveUpdate( e, this._hus, true );
-			} );
+				document.addEventListener( 'mousemove', function elh(e){
+					sBarVars.events.mousemove = elh;
+					_this._moveUpdate( e, sBarVars, true );
+				} );
 
-			this._scrollBar.h.addEventListener( 'mouseup', function(e){
-				_this._moveEnd( e, this._hus );
-			} );
+				document.addEventListener( 'mouseup', function elh(e){
+					sBarVars.events.mouseup = elh;
+					_this._moveEnd( e, sBarVars );
+				} );
 
-			this._scrollBar.h.addEventListener( 'mouseleave', function(e){
-				_this._moveEnd( e, this._hus );
+				document.addEventListener( 'mouseleave', function elh(e){
+					sBarVars.events.mouseleave = elh;
+					_this._moveEnd( e, sBarVars );
+				} );
+
 			} );
 
 		}
+
+	},
+
+	_unbindSomeBarsEvents: function( sBarVars ){
+
+		if( sBarVars.events.mousemove )	document.removeEventListener( 'mousemove', sBarVars.events.mousemove );
+		if( sBarVars.events.mouseup )	document.removeEventListener( 'mouseup', sBarVars.events.mouseup );
+		if( sBarVars.events.mouseleave ) document.removeEventListener( 'mouseleave', sBarVars.events.mouseleave );
 
 	},
 
@@ -213,6 +238,7 @@ HuScroll.prototype = {
 	},
 
 	_moveEnd: function(e, sBarVars){
+		this._unbindSomeBarsEvents( sBarVars );
 		sBarVars.moveStart = null;
 		sBarVars.moveDiff = 0;
 		sBarVars.scrollBefore = null;
