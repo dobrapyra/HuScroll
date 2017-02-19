@@ -25,8 +25,31 @@
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus voluptatem, dicta fuga saepe vitae vel autem repudiandae, suscipit quae id aliquid voluptate, reprehenderit explicabo dolorum adipisci eaque perferendis sapiente. Ipsum.</p>
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus voluptatem, dicta fuga saepe vitae vel autem repudiandae, suscipit quae id aliquid voluptate, reprehenderit explicabo dolorum adipisci eaque perferendis sapiente. Ipsum.</p>
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus voluptatem, dicta fuga saepe vitae vel autem repudiandae, suscipit quae id aliquid voluptate, reprehenderit explicabo dolorum adipisci eaque perferendis sapiente. Ipsum.</p>
+						<p>&nbsp;</p>
+						<h4>nested vertical</h4>
+						<div class="nestedOuterBox">
+							<div id="nestedVerticalScroll" class="scroll">
+								<div class="innerBox">
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus voluptatem, dicta fuga saepe vitae vel autem repudiandae, suscipit quae id aliquid voluptate, reprehenderit explicabo dolorum adipisci eaque perferendis sapiente. Ipsum.</p>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus voluptatem, dicta fuga saepe vitae vel autem repudiandae, suscipit quae id aliquid voluptate, reprehenderit explicabo dolorum adipisci eaque perferendis sapiente. Ipsum.</p>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus voluptatem, dicta fuga saepe vitae vel autem repudiandae, suscipit quae id aliquid voluptate, reprehenderit explicabo dolorum adipisci eaque perferendis sapiente. Ipsum.</p>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus voluptatem, dicta fuga saepe vitae vel autem repudiandae, suscipit quae id aliquid voluptate, reprehenderit explicabo dolorum adipisci eaque perferendis sapiente. Ipsum.</p>
+								</div>
+							</div>
+						</div>
+						<p>&nbsp;</p>
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus voluptatem, dicta fuga saepe vitae vel autem repudiandae, suscipit quae id aliquid voluptate, reprehenderit explicabo dolorum adipisci eaque perferendis sapiente. Ipsum.</p>
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus voluptatem, dicta fuga saepe vitae vel autem repudiandae, suscipit quae id aliquid voluptate, reprehenderit explicabo dolorum adipisci eaque perferendis sapiente. Ipsum.</p>
+						<p>&nbsp;</p>
+						<h4>nested vertical</h4>
+						<div class="nestedOuterBox">
+							<div id="nestedHorizontalScroll" class="scroll">
+								<div class="innerBox innerBox--h">
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus voluptatem, dicta fuga saepe vitae vel autem repudiandae, suscipit quae id aliquid voluptate, reprehenderit explicabo dolorum adipisci eaque perferendis sapiente. Ipsum. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus voluptatem, dicta fuga saepe vitae vel autem repudiandae, suscipit quae id aliquid voluptate, reprehenderit explicabo dolorum adipisci eaque perferendis sapiente. Ipsum.</p>
+								</div>
+							</div>
+						</div>
+						<p>&nbsp;</p>
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus voluptatem, dicta fuga saepe vitae vel autem repudiandae, suscipit quae id aliquid voluptate, reprehenderit explicabo dolorum adipisci eaque perferendis sapiente. Ipsum.</p>
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus voluptatem, dicta fuga saepe vitae vel autem repudiandae, suscipit quae id aliquid voluptate, reprehenderit explicabo dolorum adipisci eaque perferendis sapiente. Ipsum.</p>
 					</div>
@@ -50,7 +73,9 @@
 		<script type="text/javascript">
 			(function(){
 				new HuScroll( document.getElementById('verticalScroll') );
+				new HuScroll( document.getElementById('nestedVerticalScroll') );
 				new HuScroll( document.getElementById('horizontalScroll'), { horizontal: true } );
+				new HuScroll( document.getElementById('nestedHorizontalScroll'), { horizontal: true } );
 			})();
 		</script>
 

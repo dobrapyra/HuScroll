@@ -68,6 +68,7 @@ HuScroll.prototype = {
 			var wDiff = scroll.offsetWidth - scroll.scrollWidth;
 			scroll.style.marginLeft = '';
 			if( wDiff ){
+				scroll.style.maxWidth = 'none';
 				scroll.style.marginRight = -wDiff+'px';
 				this._nativeHidden.v = true;
 			}
@@ -79,6 +80,7 @@ HuScroll.prototype = {
 			var hDiff = scroll.offsetHeight - scroll.scrollHeight;
 			scroll.style.marginTop = '';
 			if( hDiff ){
+				scroll.style.maxHeight = 'none';
 				scroll.style.marginBottom = -hDiff+'px';
 				this._nativeHidden.h = true;
 			}
