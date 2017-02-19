@@ -224,6 +224,7 @@ HuScroll.prototype = {
 			sBarVars.moveStart = e.clientX;
 			sBarVars.scrollBefore = this._scroll.scrollLeft;
 		}
+		this._scroll.style.userSelect = 'none';
 		this._scroll.style.pointerEvents = 'none';
 	},
 
@@ -242,6 +243,7 @@ HuScroll.prototype = {
 		sBarVars.moveStart = null;
 		sBarVars.moveDiff = 0;
 		sBarVars.scrollBefore = null;
+		this._scroll.style.userSelect = '';
 		this._scroll.style.pointerEvents = '';
 	},
 
