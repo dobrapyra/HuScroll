@@ -2,7 +2,7 @@
 /**
 * HuScroll - (Hide ugly) Scroll
 * author: dobrapyra (Michał Zieliński)
-* version: 2017-02-19 update1
+* version: 2017-02-20
 */
 var HuScroll = function(el, options){ this.init(el, options); };
 HuScroll.prototype = {
